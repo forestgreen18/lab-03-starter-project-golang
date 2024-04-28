@@ -1,0 +1,7 @@
+build/
+
+.dockerignore
+
+Dockerfile
+
+README.rst
