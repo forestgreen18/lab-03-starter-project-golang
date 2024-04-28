@@ -15,8 +15,8 @@ COPY . .
 # Build the application
 RUN go build -o build/fizzbuzz
 
-# Second stage: Create the final image from scratch
-FROM scratch
+# Second stage: Create the final image from distroless
+FROM gcr.io/distroless/static-debian12
 
 # Copy the binary from the first stage
 COPY --from=builder /go-app/build/fizzbuzz /fizzbuzz
