@@ -1,5 +1,5 @@
-# Use Alpine-based Golang image for a small footprint
-FROM golang:1.22.2-alpine3.19
+# First stage: Build the binary
+FROM golang:1.22.2-alpine3.19 as builder
 
 # Set the working directory in the container
 WORKDIR /go-app
@@ -15,5 +15,14 @@ COPY . .
 # Build the application
 RUN go build -o build/fizzbuzz
 
-# Command to run the executable with "serve" argument
-CMD ["./build/fizzbuzz", "serve"]
+# Second stage: Create the final image from scratch
+FROM scratch
+
+# Copy the binary from the first stage
+COPY --from=builder /go-app/build/fizzbuzz /fizzbuzz
+
+# Copy the templates folder from the first stage
+COPY --from=builder /go-app/templates /templates
+
+# Command to run the executable
+CMD ["/fizzbuzz", "serve"]
